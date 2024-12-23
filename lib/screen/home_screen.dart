@@ -25,12 +25,14 @@ class _HomeScreenState extends State<HomeScreen> {
   late DateTime _selectedDay;
   late School _school;
 
+  late DateTime _firstDayOfMonth;
+  late DateTime _lastDayOfMonth;
+
   @override
   void initState() {
     super.initState();
     _school = widget.school;
     _selectedDay = _focusedDay;
-
   }
 
   @override
@@ -60,6 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
+              _firstDayOfMonth = DateTime(focusedDay.year, focusedDay.month, 1);
+              _lastDayOfMonth = DateTime(focusedDay.year, focusedDay.month + 1, 1).subtract(const Duration(days: 1));
+              print(_firstDayOfMonth);
+              print(_lastDayOfMonth);
             },
           ),
           Column(
@@ -77,8 +83,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _getMenuListByMonth(DateTime dateTime, School school) async {
-    Uri uri = Uri.parse('${Constants.neisDomain.alias}/hub/mealServiceDietInfo');
+  Future<void> _getMenuListByMonth(DateTime dateTime) async {
+    Uri uri = Uri.parse('${Constants.neisDomain.alias}/hub/mealServiceDietInfo')
+        .replace(queryParameters: {
+      "Type": "json",
+      "pIndex": "1",
+      "pSize": "30",
+      "ATPT_OFCDC_SC_CODE": _school.ATPT_OFCDC_SC_CODE,
+      "SD_SCHUL_CODE": _school.SD_SCHUL_CODE,
+      "KEY": Constants.neisKey,
+      "MLSV_FROM_YMD": "",
+      "MLSV_TO_YMD": "",
+    });
 
     await http
         .get(uri)

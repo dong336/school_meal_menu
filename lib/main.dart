@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: '오늘의 학교 급식',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
-        useMaterial3: true,
+        useMaterial3: false,
       ),
       initialRoute: '/',
       routes: {
