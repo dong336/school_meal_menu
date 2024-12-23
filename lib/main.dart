@@ -3,6 +3,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:school_meal_menu/screen/home_screen.dart';
 import 'package:school_meal_menu/screen/search_screen.dart';
 
+import 'package:school_meal_menu/dto/school.dart';
+
 void main() {
   initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
@@ -15,8 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '오늘의 학교 급식',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
-        useMaterial3: false,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
+        useMaterial3: true,
       ),
       initialRoute: '/',
       routes: {
@@ -29,7 +31,8 @@ class MyApp extends StatelessWidget {
           return const SearchScreen();
         },
         '/search': (context) => const SearchScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/home': (context) => HomeScreen(
+            school: ModalRoute.of(context)!.settings.arguments as School),
       },
     );
   }

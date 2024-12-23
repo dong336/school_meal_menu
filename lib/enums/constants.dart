@@ -1,5 +1,6 @@
 enum Constants {
-  serverUri("http://10.0.2.2:8080"),
+  serverDomain("http://10.0.2.2:8080"),
+  neisDomain("https://open.neis.go.kr/hub/mealServiceDietInfo"),
   ;
 
   final String alias;
