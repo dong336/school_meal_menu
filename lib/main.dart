@@ -17,9 +17,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '오늘의 학교 급식',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
-        useMaterial3: false,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
+        useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.orangeAccent,
+        ),
       ),
+
       initialRoute: '/',
       routes: {
         '/': (context) {
