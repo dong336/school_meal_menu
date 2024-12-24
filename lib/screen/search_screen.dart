@@ -1,5 +1,5 @@
 import 'dart:convert' as convert;
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:school_meal_menu/dto/school.dart';
@@ -20,13 +20,58 @@ class _SearchScreenState extends State<SearchScreen> {
   String? inputText;
   List<School> schools = [];
 
+  BannerAd? _banner;
+  bool _loadingBanner = false;
+
+  Future<void> _createBanner(BuildContext context) async {
+    final AnchoredAdaptiveBannerAdSize? size =
+    await AdSize.getAnchoredAdaptiveBannerAdSize(
+      Orientation.portrait,
+      MediaQuery.of(context).size.width.truncate(),
+    );
+    if (size == null) {
+      return;
+    }
+    final BannerAd banner = BannerAd(
+      size: size,
+      request: const AdRequest(),
+      adUnitId: Constants.bannerAdUnitId.alias,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$BannerAd loaded.');
+          setState(() {
+            _banner = ad as BannerAd?;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$BannerAd failedToLoad: $error');
+          ad.dispose();
+        },
+        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
+      ),
+    );
+    return banner.load();
+  }
+
   @override
   void initState() {
     super.initState();
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _banner?.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (!_loadingBanner) {
+      _loadingBanner = true;
+      _createBanner(context);
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('나의 학교 찾기')),
       body: Column(
@@ -81,6 +126,13 @@ class _SearchScreenState extends State<SearchScreen> {
                           )),
             ),
           ),
+          if (_banner != null)
+            Container(
+              color: Colors.green,
+              width: _banner!.size.width.toDouble(),
+              height: _banner!.size.height.toDouble(),
+              child: AdWidget(ad: _banner!),
+            ),
         ],
       ),
     );
