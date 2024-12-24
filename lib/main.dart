@@ -33,6 +33,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    userProvider.loadUserId();
+    userProvider.loadAnonymousUserId();
+
     return MaterialApp(
       title: '오늘의 학교 급식',
       theme: ThemeData(

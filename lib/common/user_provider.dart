@@ -6,10 +6,10 @@ import 'package:uuid/uuid.dart';
 
 class UserProvider with ChangeNotifier {
   String? _userId;
-  String? _displayUserId;
+  String? _anonymousUserId;
 
   String? get userId => _userId;
-  String? get displayUserId => _displayUserId;
+  String? get anonymousUserId => _anonymousUserId;
 
   Future<void> loadUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -23,13 +23,13 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadDiplayUserId() async {
+  Future<void> loadAnonymousUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _displayUserId = prefs.getString('displayUserId');
+    _anonymousUserId = prefs.getString('displayUserId');
 
-    if (_displayUserId == null) {
-      _displayUserId = "익명 ${Random().nextInt(9000) + 1000}";
-      await prefs.setString('displayUserId', _displayUserId!);
+    if (_anonymousUserId == null) {
+      _anonymousUserId = "익명 ${Random().nextInt(9000) + 1000}";
+      await prefs.setString('displayUserId', _anonymousUserId!);
     }
 
     notifyListeners();

@@ -35,6 +35,9 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final id = userProvider.userId;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -63,11 +66,27 @@ class _CommentScreenState extends State<CommentScreen> {
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            _schoolComments[index].createdBy,
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                _schoolComments[index].createdByAnonymous,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              if (id == _schoolComments[index].createdBy)
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    _deleteComment(context, _schoolComments[index].id);
+                                  },
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ),
+                                ),
+                            ],
                           ),
                           Text(
                             _schoolComments[index].createdAt,
@@ -87,6 +106,35 @@ class _CommentScreenState extends State<CommentScreen> {
           openInputDialog(context);
         },
         child: const Icon(Icons.edit),
+      ),
+    );
+  }
+
+  Future _deleteComment(BuildContext context, int id) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('삭제하시겠습니까?'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              _deleteProcess(context, id);
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.white,
+            ),
+            child: const Text('예'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.white,
+            ),
+            child: const Text('아니오'),
+          ),
+        ],
       ),
     );
   }
@@ -114,25 +162,21 @@ class _CommentScreenState extends State<CommentScreen> {
           ),
         ),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () {
-              _postComment(textEditingController.text);
-              _initData();
-              Navigator.pop(context);
+              _addProcess(context);
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.grey, width: 1),
             ),
             child: const Text('등록'),
           ),
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.white,
-              side: const BorderSide(color: Colors.grey, width: 1),
             ),
             child: const Text('닫기'),
           ),
@@ -141,9 +185,22 @@ class _CommentScreenState extends State<CommentScreen> {
     );
   }
 
+  Future _addProcess(BuildContext context) async {
+    await _postComment(textEditingController.text);
+    await _initData();
+    Navigator.pop(context);
+  }
+
+  Future _deleteProcess(BuildContext context, int id) async {
+    await _calldDeleteMethod(id);
+    await _initData();
+    Navigator.pop(context);
+  }
+
   Future<void> _postComment(String text) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final id = userProvider.userId;
+    final anonymousId = userProvider.anonymousUserId;
 
     Uri uri =
         Uri.parse('${Constants.serverDomain.alias}/api/school-comment/basic');
@@ -152,14 +209,13 @@ class _CommentScreenState extends State<CommentScreen> {
         "school_id": _school.id,
         "school_name": _school.schoolName,
         "comment": text,
+        "created_by_anonymous": anonymousId,
         "created_by": id,
       };
 
       final response = await http.post(
         uri,
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: {'Content-Type': 'application/json'},
         body: convert.jsonEncode(requestBody),
       );
 
@@ -168,7 +224,6 @@ class _CommentScreenState extends State<CommentScreen> {
       } else {
         print('Request failed with status: ${response.statusCode}');
       }
-
     } catch (error) {
       throw Exception('HTTP error occurred: $error');
     }
@@ -192,6 +247,28 @@ class _CommentScreenState extends State<CommentScreen> {
               jsonResponse.map((data) => SchoolComment.fromJson(data)).toList();
           _isLoading = false;
         });
+      } else {
+        throw Exception(
+            'Failed to load data, statusCode: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('HTTP error occurred: $error');
+    }
+  }
+
+  Future _calldDeleteMethod(int id) async {
+    Uri uri = Uri.parse('${Constants.serverDomain.alias}/api/school-comment/basic');
+
+    try {
+      final Map<String, dynamic> requestBody = {"id": id};
+      final response = await http.delete(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+        body: convert.jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 204) {
+
       } else {
         throw Exception(
             'Failed to load data, statusCode: ${response.statusCode}');
