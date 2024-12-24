@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:school_meal_menu/dto/school.dart';
 import 'package:school_meal_menu/enums/constants.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -39,6 +40,40 @@ class _HomeScreenState extends State<HomeScreen> {
       DateTime(DateTime.now().year, DateTime.now().month + 1, 1)
           .subtract(const Duration(days: 1));
 
+  BannerAd? _banner;
+  bool _loadingBanner = false;
+
+  Future<void> _createBanner(BuildContext context) async {
+    final AnchoredAdaptiveBannerAdSize? size =
+        await AdSize.getAnchoredAdaptiveBannerAdSize(
+      Orientation.portrait,
+      MediaQuery.of(context).size.width.truncate(),
+    );
+    if (size == null) {
+      return;
+    }
+    final BannerAd banner = BannerAd(
+      size: size,
+      request: const AdRequest(),
+      adUnitId: Constants.bannerAdUnitId.alias,
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$BannerAd loaded.');
+          setState(() {
+            _banner = ad as BannerAd?;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$BannerAd failedToLoad: $error');
+          ad.dispose();
+        },
+        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
+      ),
+    );
+    return banner.load();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -49,13 +84,25 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _banner?.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (!_loadingBanner) {
+      _loadingBanner = true;
+      _createBanner(context);
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text('${_school.schoolName} 식단')),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
               child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TableCalendar(
                   headerStyle: const HeaderStyle(
@@ -92,13 +139,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 _isNoMeal
                     ? const Text("식사가 없는 날이에요")
                     : Expanded(
-                      child: ListView.builder(
-                        itemCount: _mealForToday.length,
-                        itemBuilder: (context, index) => ListTile(
-                          title: Text(_mealForToday[index]),
+                        child: ListView.builder(
+                          itemCount: _mealForToday.length,
+                          itemBuilder: (context, index) => ListTile(
+                            title: Text(_mealForToday[index]),
+                          ),
                         ),
                       ),
-                    ),
+                if (_banner != null)
+                  Container(
+                    color: Colors.green,
+                    width: _banner!.size.width.toDouble(),
+                    height: _banner!.size.height.toDouble(),
+                    child: AdWidget(ad: _banner!),
+                  ),
               ],
             )),
     );
