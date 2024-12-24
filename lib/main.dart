@@ -4,8 +4,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
 import 'package:school_meal_menu/screen/comment_screen.dart';
@@ -19,11 +17,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   MobileAds.instance.initialize();
+
   initializeDateFormatting().then((_) => {
-        runApp(
-          const MyApp(),
-        )
+        runApp(ChangeNotifierProvider(
+          create: (context) => UserProvider(),
+          child: const MyApp(),
+        ))
       });
 }
 

@@ -2,7 +2,8 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
-import 'package:school_meal_menu/component/comment.dart';
+import 'package:provider/provider.dart';
+import 'package:school_meal_menu/common/user_provider.dart';
 import 'package:school_meal_menu/dto/school.dart';
 import 'package:school_meal_menu/dto/school_comment.dart';
 import 'package:school_meal_menu/enums/constants.dart';
@@ -83,14 +84,14 @@ class _CommentScreenState extends State<CommentScreen> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          openInputDialog();
+          openInputDialog(context);
         },
         child: const Icon(Icons.edit),
       ),
     );
   }
 
-  Future openInputDialog() {
+  Future openInputDialog(BuildContext context) async {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -141,6 +142,9 @@ class _CommentScreenState extends State<CommentScreen> {
   }
 
   Future<void> _postComment(String text) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final id = userProvider.userId;
+
     Uri uri =
         Uri.parse('${Constants.serverDomain.alias}/api/school-comment/basic');
     try {
@@ -148,7 +152,7 @@ class _CommentScreenState extends State<CommentScreen> {
         "school_id": _school.id,
         "school_name": _school.schoolName,
         "comment": text,
-        "created_by": "system",
+        "created_by": id,
       };
 
       final response = await http.post(
