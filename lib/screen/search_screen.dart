@@ -97,19 +97,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     controller.openView();
                   },
                   leading: const Icon(Icons.search),
-                  // trailing: <Widget>[
-                  //   Tooltip(
-                  //     message: 'Change brightness mode',
-                  //     child: IconButton(
-                  //       onPressed: () {
-                  //         setState(() {
-                  //         });
-                  //       },
-                  //       icon: const Icon(Icons.wb_sunny_outlined),
-                  //       selectedIcon: const Icon(Icons.brightness_2_outlined),
-                  //     ),
-                  //   )
-                  // ],
                 );
               },
               suggestionsBuilder:
@@ -127,6 +114,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           )),
             ),
           ),
+          Image.asset('assets/icon/meal_small.png'),
           if (_banner != null)
             Container(
               color: Colors.green,
