@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "690562599489",
+    "project_id": "school-meal-menu",
+    "storage_bucket": "school-meal-menu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690562599489:android:0cb980929c029e151fd4c0",
+        "android_client_info": {
+          "package_name": "com.example.school_meal_menu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZUpff8HNOBROLehiZDWf1-jDXyXyTj0c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

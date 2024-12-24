@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _school = widget.school;
     _selectedDay = _focusedDay;
 
-    _initDate();
+    _initData();
   }
 
   @override
@@ -84,12 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             .subtract(const Duration(days: 1));
                     print(_firstDayOfMonth);
                     print(_lastDayOfMonth);
+                    _getMenuListByMonth();
                   },
                 ),
                 const Divider(),
                 Text(DateUtil.convertToView(_selectedDay)),
                 _isNoMeal
-                    ? const Text("식사가 없는 날이에요.")
+                    ? const Text("식사가 없는 날이에요")
                     : Expanded(
                       child: ListView.builder(
                         itemCount: _mealForToday.length,
@@ -107,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedDay = selectedDay;
       print(_selectedDay);
+      _setTodayMeal();
     });
   }
 
@@ -121,6 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
         _isNoMeal = true;
       });
       return;
+    } else {
+      setState(() {
+        _isNoMeal = false;
+      });
     }
 
     setState(() {
@@ -128,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _initDate() async {
+  Future<void> _initData() async {
     await _getMenuListByMonth();
     _setTodayMeal();
   }
