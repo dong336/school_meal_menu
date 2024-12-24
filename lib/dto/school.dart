@@ -1,5 +1,5 @@
 class School {
-  String id;
+  int id;
   String address;
   String schoolName;
 

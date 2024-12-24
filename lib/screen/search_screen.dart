@@ -154,9 +154,9 @@ class _SearchScreenState extends State<SearchScreen> {
         List jsonData =
             convert.jsonDecode(convert.utf8.decode(response.bodyBytes));
         schools = jsonData.map((data) => School.fromJson(data)).toList();
-        print('schools: $schools');
+        // print('schools: $schools');
       } else {
-        print('Failed: ${response.statusCode}');
+        // print('Failed: ${response.statusCode}');
       }
     }).catchError((e) {
       print('Error: $e');

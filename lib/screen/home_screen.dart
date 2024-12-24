@@ -97,55 +97,81 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('${_school.schoolName} 식단')),
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('${_school.schoolName} 식단'),
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  '/comment',
+                  arguments: _school,
+                );
+              },
+              icon: const Icon(Icons.comment),
+            ),
+          ],
+        ),
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(
               child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TableCalendar(
-                  headerStyle: const HeaderStyle(
-                    titleCentered: true,
-                    formatButtonVisible: false,
+                Container(
+                  color: Colors.white,
+                  child: TableCalendar(
+                    headerStyle: const HeaderStyle(
+                      titleCentered: true,
+                      formatButtonVisible: false,
+                    ),
+                    calendarStyle: const CalendarStyle(
+                      outsideDaysVisible: false,
+                      defaultTextStyle: TextStyle(color: Colors.black),
+                      weekNumberTextStyle: TextStyle(color: Colors.red),
+                      weekendTextStyle: TextStyle(color: Colors.red),
+                    ),
+                    locale: 'ko_KR',
+                    firstDay: DateTime(DateTime.now().year - 2,
+                        DateTime.now().month, DateTime.now().day),
+                    lastDay: DateTime(DateTime.now().year + 2,
+                        DateTime.now().month, DateTime.now().day),
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    daysOfWeekStyle: const DaysOfWeekStyle(
+                      weekendStyle: TextStyle(color: Colors.red),
+                    ),
+                    onDaySelected: (selectedDay, focusedDay) {
+                      selectDay(selectedDay, focusedDay);
+                    },
+                    onPageChanged: (focusedDay) {
+                      _focusedDay = focusedDay;
+                      _firstDayOfMonth =
+                          DateTime(focusedDay.year, focusedDay.month, 1);
+                      _lastDayOfMonth =
+                          DateTime(focusedDay.year, focusedDay.month + 1, 1)
+                              .subtract(const Duration(days: 1));
+                      print(_firstDayOfMonth);
+                      print(_lastDayOfMonth);
+                      _getMenuListByMonth();
+                    },
                   ),
-                  locale: 'ko_KR',
-                  firstDay: DateTime(DateTime.now().year - 2,
-                      DateTime.now().month, DateTime.now().day),
-                  lastDay: DateTime(DateTime.now().year + 2,
-                      DateTime.now().month, DateTime.now().day),
-                  focusedDay: _focusedDay,
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  daysOfWeekStyle: const DaysOfWeekStyle(
-                    weekendStyle: TextStyle(color: Colors.red),
-                  ),
-                  onDaySelected: (selectedDay, focusedDay) {
-                    selectDay(selectedDay, focusedDay);
-                  },
-                  onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                    _firstDayOfMonth =
-                        DateTime(focusedDay.year, focusedDay.month, 1);
-                    _lastDayOfMonth =
-                        DateTime(focusedDay.year, focusedDay.month + 1, 1)
-                            .subtract(const Duration(days: 1));
-                    print(_firstDayOfMonth);
-                    print(_lastDayOfMonth);
-                    _getMenuListByMonth();
-                  },
                 ),
                 const Divider(),
                 Text(DateUtil.convertToView(_selectedDay)),
-                _isNoMeal
-                    ? const Text("식사가 없는 날이에요")
-                    : Expanded(
-                        child: ListView.builder(
+                Expanded(
+                  child: _isNoMeal
+                      ? const Text("식사가 없는 날이에요")
+                      : ListView.builder(
                           itemCount: _mealForToday.length,
                           itemBuilder: (context, index) => ListTile(
                             title: Text(_mealForToday[index]),
                           ),
                         ),
-                      ),
+                ),
                 if (_banner != null)
                   Container(
                     color: Colors.green,
