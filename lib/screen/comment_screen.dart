@@ -87,8 +87,10 @@ class _CommentScreenState extends State<CommentScreen> {
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               child: ListTile(
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                title: Text(_schoolComments[index].comment),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -113,27 +115,6 @@ class _CommentScreenState extends State<CommentScreen> {
                                               size: 20,
                                             ),
                                           ),
-                                      ],
-                                    ),
-                                    Text(_schoolComments[index].comment),
-                                  ],
-                                ),
-                                subtitle: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(Icons.thumb_up_outlined),
-                                        ),
-                                        Text(_schoolComments[index].thumbsUp.toString()),
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(Icons.thumb_down_outlined),
-                                        ),
-                                        Text(_schoolComments[index].thumbsDown.toString()),
                                       ],
                                     ),
                                     Text(
