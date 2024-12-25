@@ -52,53 +52,81 @@ class _CommentScreenState extends State<CommentScreen> {
           : Column(
               children: [
                 Expanded(
-                    child: ListView.builder(
-                  itemCount: _schoolComments.length,
-                  itemBuilder: (context, index) => Container(
-                    margin: const EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey, width: 0.5),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: ListTile(
-                      title: Text(_schoolComments[index].comment),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                _schoolComments[index].createdByAnonymous,
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              if (id == _schoolComments[index].createdBy)
-                                IconButton(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {
-                                    _deleteComment(context, _schoolComments[index].id);
-                                  },
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.red,
-                                    size: 20,
+                    child: _schoolComments.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('assets/icon/meal_small.png'),
+                                const Text(
+                                  '아직 작성된 글이 없네요.',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                            ],
-                          ),
-                          Text(
-                            _schoolComments[index].createdAt,
-                            style: const TextStyle(
-                              color: Colors.grey,
+                                const Text(
+                                  '첫 글을 작성해봐요.',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ))
+                          )
+                        : ListView.builder(
+                            itemCount: _schoolComments.length,
+                            itemBuilder: (context, index) => Container(
+                              margin: const EdgeInsets.all(3.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border:
+                                    Border.all(color: Colors.grey, width: 0.5),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: ListTile(
+                                title: Text(_schoolComments[index].comment),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          _schoolComments[index]
+                                              .createdByAnonymous,
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        if (id ==
+                                            _schoolComments[index].createdBy)
+                                          IconButton(
+                                            padding: EdgeInsets.zero,
+                                            onPressed: () {
+                                              _deleteComment(context,
+                                                  _schoolComments[index].id);
+                                            },
+                                            icon: const Icon(
+                                              Icons.close,
+                                              color: Colors.red,
+                                              size: 20,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    Text(
+                                      _schoolComments[index].createdAt,
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ))
               ],
             ),
       floatingActionButton: FloatingActionButton(
@@ -257,7 +285,8 @@ class _CommentScreenState extends State<CommentScreen> {
   }
 
   Future _calldDeleteMethod(int id) async {
-    Uri uri = Uri.parse('${Constants.serverDomain.alias}/api/school-comment/basic');
+    Uri uri =
+        Uri.parse('${Constants.serverDomain.alias}/api/school-comment/basic');
 
     try {
       final Map<String, dynamic> requestBody = {"id": id};
@@ -268,7 +297,6 @@ class _CommentScreenState extends State<CommentScreen> {
       );
 
       if (response.statusCode == 204) {
-
       } else {
         throw Exception(
             'Failed to load data, statusCode: ${response.statusCode}');

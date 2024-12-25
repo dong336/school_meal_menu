@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(DateUtil.convertToView(_selectedDay)),
                 Expanded(
                   child: _isNoMeal
-                      ? const Text("식사가 없는 날이에요")
+                      ? const Center(child: Text("식사가 없는 날이에요"))
                       : ListView.builder(
                           itemCount: _mealForToday.length,
                           itemBuilder: (context, index) => ListTile(
