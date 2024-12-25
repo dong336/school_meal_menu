@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:school_meal_menu/common/api_helper.dart';
 import 'package:school_meal_menu/common/user_provider.dart';
 import 'package:school_meal_menu/dto/school.dart';
 import 'package:school_meal_menu/dto/school_comment.dart';
@@ -193,6 +194,7 @@ class _CommentScreenState extends State<CommentScreen> {
           ElevatedButton(
             onPressed: () {
               _addProcess(context);
+              textEditingController.clear();
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.white,
@@ -229,6 +231,7 @@ class _CommentScreenState extends State<CommentScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final id = userProvider.userId;
     final anonymousId = userProvider.anonymousUserId;
+    final headers = await ApiHelper.getHeaders();
 
     Uri uri =
         Uri.parse('${Constants.serverDomain.alias}/api/school-comment/basic');
@@ -243,7 +246,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
       final response = await http.post(
         uri,
-        headers: {'Content-Type': 'application/json'},
+        headers: headers,
         body: convert.jsonEncode(requestBody),
       );
 
@@ -264,8 +267,10 @@ class _CommentScreenState extends State<CommentScreen> {
       "school_id": _school.id.toString(),
     });
 
+    final headers = await ApiHelper.getHeaders();
+
     try {
-      final response = await http.get(uri);
+      final response = await http.get(uri, headers: headers);
       if (response.statusCode == 200) {
         final List jsonResponse =
             convert.jsonDecode(convert.utf8.decode(response.bodyBytes));
@@ -290,9 +295,11 @@ class _CommentScreenState extends State<CommentScreen> {
 
     try {
       final Map<String, dynamic> requestBody = {"id": id};
+      final headers = await ApiHelper.getHeaders();
+
       final response = await http.delete(
         uri,
-        headers: {'Content-Type': 'application/json'},
+        headers: headers,
         body: convert.jsonEncode(requestBody),
       );
 

@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:school_meal_menu/common/api_helper.dart';
 import 'package:school_meal_menu/dto/school.dart';
 
 import 'package:school_meal_menu/enums/constants.dart';
@@ -127,7 +128,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  void fetchSearchSchools(String? text) {
+  Future<void> fetchSearchSchools(String? text) async {
     if (text == null ||
         text.trim().isEmpty ||
         !RegExp(r'[\uAC00-\uD7A3]').hasMatch(text)) return;
@@ -137,7 +138,9 @@ class _SearchScreenState extends State<SearchScreen> {
       "school_name": SearchChecker.removeNonKorean(text),
     });
 
-    http.get(uri).then((response) {
+    final headers = await ApiHelper.getHeaders();
+
+    http.get(uri, headers: headers).then((response) {
       if (response.statusCode == 200) {
         List jsonData =
             convert.jsonDecode(convert.utf8.decode(response.bodyBytes));
