@@ -25,6 +25,14 @@ class School {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "address": address,
+    "school_name": schoolName,
+    "ATPT_OFCDC_SC_CODE": ATPT_OFCDC_SC_CODE,
+    "SD_SCHUL_CODE": SD_SCHUL_CODE,
+  };
+
   @override
   String toString() {
     return 'School(id: $id, schoolName: $schoolName, address: $address, ATPT_OFCDC_SC_CODE: $ATPT_OFCDC_SC_CODE, SD_SCHUL_CODE: $SD_SCHUL_CODE)';

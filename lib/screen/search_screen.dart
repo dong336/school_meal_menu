@@ -2,11 +2,13 @@ import 'dart:convert' as convert;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+
 import 'package:school_meal_menu/common/api_helper.dart';
 import 'package:school_meal_menu/dto/school.dart';
-
 import 'package:school_meal_menu/enums/constants.dart';
 import 'package:school_meal_menu/util/search_checker.dart';
+import 'package:school_meal_menu/common/user_provider.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -68,6 +70,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    userProvider.loadRecentSchool(context);
+
     if (!_loadingBanner) {
       _loadingBanner = true;
       _createBanner(context);

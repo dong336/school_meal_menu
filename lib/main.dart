@@ -47,16 +47,11 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.orangeAccent,
         ),
       ),
-      initialRoute: '/',
+      initialRoute: '/search',
       routes: {
-        '/': (context) {
-          /*
-             TODO shared_preferences 를 검사하여
-             캐시된 학교 정보가 있다면 가장 최신 검색 이력에 대한 HomeScreen
-             캐시된 학교 정보가 없으면 SearchSreen
-          */
-          return const SearchScreen();
-        },
+        // '/': (context) {
+        //   return const SearchScreen();
+        // },
         '/search': (context) => const SearchScreen(),
         '/home': (context) => HomeScreen(
             school: ModalRoute.of(context)!.settings.arguments as School),
