@@ -121,7 +121,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           )),
             ),
           ),
-          Image.asset('assets/icon/meal_small.png'),
+          _banner != null ? Image.asset('assets/icon/meal_small.png') : const CircularProgressIndicator(),
           if (_banner != null)
             Container(
               color: Colors.green,

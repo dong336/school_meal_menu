@@ -98,19 +98,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        title: Stack(
           children: [
-            Text('${_school.schoolName} 식단'),
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/comment',
-                  arguments: _school,
-                );
-              },
-              icon: const Icon(Icons.comment),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Text('${_school.schoolName} 식단'),
+                ],
+              ),
             ),
           ],
         ),
@@ -181,6 +177,30 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
               ],
             )),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 70),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              '/comment',
+              arguments: _school,
+            );
+          },
+          backgroundColor: Colors.white,
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.comment, color: Colors.black),
+              SizedBox(width: 5),
+              Text(
+                '+',
+                style: TextStyle(color: Colors.black),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

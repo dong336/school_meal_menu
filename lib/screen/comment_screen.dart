@@ -194,7 +194,6 @@ class _CommentScreenState extends State<CommentScreen> {
           ElevatedButton(
             onPressed: () {
               _addProcess(context);
-              textEditingController.clear();
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.white,
@@ -219,6 +218,7 @@ class _CommentScreenState extends State<CommentScreen> {
     await _postComment(textEditingController.text);
     await _initData();
     Navigator.pop(context);
+    textEditingController.clear();
   }
 
   Future _deleteProcess(BuildContext context, int id) async {
