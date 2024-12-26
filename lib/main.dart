@@ -47,12 +47,9 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.orangeAccent,
         ),
       ),
-      initialRoute: '/search',
-      routes: {
-        // '/': (context) {
-        //   return const SearchScreen();
-        // },
-        '/search': (context) => const SearchScreen(),
+    initialRoute: '/search',
+    routes: {
+    '/search': (context) => const SearchScreen(),
         '/home': (context) => HomeScreen(
             school: ModalRoute.of(context)!.settings.arguments as School),
         '/comment': (context) => CommentScreen(
