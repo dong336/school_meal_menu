@@ -1,4 +1,4 @@
-package com.school_meal_menu
+package com.app.school_meal_menu
 
 import io.flutter.embedding.android.FlutterActivity
 

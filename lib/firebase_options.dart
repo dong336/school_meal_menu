@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '690562599489',
     projectId: 'school-meal-menu',
     storageBucket: 'school-meal-menu.firebasestorage.app',
-    iosBundleId: 'com.schoolMealMenu',
+    iosBundleId: 'com.app.schoolMealMenu',
   );
 }
