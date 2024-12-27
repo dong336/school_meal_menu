@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
     userProvider.loadAnonymousUserId();
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: '오늘의 학교 급식',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
