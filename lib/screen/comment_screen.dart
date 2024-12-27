@@ -41,11 +41,14 @@ class _CommentScreenState extends State<CommentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('${_school.schoolName} 식단 게시판'),
-          ],
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('${_school.schoolName} 식단 게시판'),
+            ],
+          ),
         ),
       ),
       body: _isLoading
